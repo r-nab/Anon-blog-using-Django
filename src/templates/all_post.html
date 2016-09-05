@@ -6,8 +6,8 @@
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
 <div class="well">
-<h3>{{i.title}}<small>{{i.timestamp|timesince}}</small></h3>
-<p>tags: {{i.tag}}</p>
+<h4>{{i.title}}<small>{{i.timestamp|timesince}}</small></h4>
+<p>tags:{{i.tag}}</p>
 <p>{{i.content |linebreaks |truncatechars:50}}</p>
 <a href="{% url 'blog:details' i.id %}" class="btn btn-sm btn-success">view details</a>
 </div>
