@@ -9,6 +9,7 @@ class Post(models.Model):
         ('Event','Event'),
         ('Music','Music'),
     )
+    uid = models.CharField(max_length=7, primary_key=True)
     title = models.CharField(max_length=120)
     content = models.TextField()
     tag = models.CharField(max_length=15, choices=Choices, default='Science')
