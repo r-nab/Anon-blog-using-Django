@@ -42,15 +42,15 @@ def all_posts(request):
     return render(request,'all_post.html', context)
 
 
-def details(request, post_uid):
-    qry = get_object_or_404(Post, pk=post_uid)
+def details(request, post_myurl):
+    qry = get_object_or_404(Post, myurl=post_myurl)
     # qry = Post.objects.get(pk=post_uid)
-    context = {'title':qry.title, 'content':qry.content, 'timestamp':qry.timestamp, 'tag':qry.tag}
+    context = {'qry':qry}
     return render(request, 'details.html', context)
 
 
 def create_post(request):
-    form = NewPostForm(request.POST or None)
+    form = NewPostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.uid = randomuid()

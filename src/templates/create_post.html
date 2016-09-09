@@ -15,7 +15,7 @@
 <div class="col-md-6 col-md-offset-3">
 <div class="well">
 <h3>Create Post</h3>
-  <form class="" method="POST" action="">{% csrf_token %}
+  <form class="" method="POST" action="" enctype="multipart/form-data" >{% csrf_token %}
 	<div class="form-group">
 		<label for="title">Title:</label>
 		<input type="text" id="title" class="form-control" maxlength="120" name="{{ form.title.html_name}}">
@@ -23,6 +23,11 @@
 	<div class="form-group">
 		<label for="content">Content:</label>
 		<textarea id="content" class="form-control" name="{{ form.content.html_name}}" rows="4"></textarea>
+	</div>
+	<div class="form-group">
+		<label for="imageupload">Upload Image:</label>
+		<input type="file" id="imageupload" class="form-control" name="{{ form.image.html_name}}">
+		<p class="help-block">*.jpg or *.png formats only</p>
 	</div>
 	<label for="tag">Tag:</label>
 	<select id="tag" name="{{ form.tag.html_name}}" class="form-control">

@@ -1,15 +1,25 @@
 {% extends "base.html"%}
 
+{% block style%}
+	small{
+	 float:right;
+	}	
+
+{% endblock style%}
+
 {% block content %}
 <br>
 {% for i in qry %}
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
 <div class="well">
-<h4>{{i.title}}<small>{{i.timestamp|timesince}}</small></h4>
+<h4>{{i.title}}<small>{{i.timestamp|timesince}} ago</small></h4>
 <p>tags:{{i.tag}}</p>
+{% if i.image %}
+<img src="{{i.image.url}}" class="img-responsive">
+{% endif %}
 <p>{{i.content |linebreaks |truncatechars:50}}</p>
-<a href="{% url 'blog:details' i.uid %}" class="btn btn-sm btn-success" style="width:80%; margin-left:10%; padding:5px;">view complete post</a>
+<a href="{% url 'blog:details' i.myurl %}" class="btn btn-sm btn-success" style="width:80%; margin-left:10%; padding:5px;">view complete post</a>
 </div>
 </div>
 </div>
