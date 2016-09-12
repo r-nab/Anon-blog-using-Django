@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from .models import Post
+from accounts.models import Account
 from .forms import NewPostForm
 import random
 from urllib.parse import quote_plus
@@ -25,62 +26,84 @@ def randomuid():
 
 
 def all_posts(request):
-    qry_list = Post.objects.all() #.order_by('-timestamp')
-    search_q = request.GET.get("q")
-    if search_q:
-        qry_list = qry_list.filter(
-            Q(title__icontains=search_q) |
-            Q(content__icontains=search_q)
-            )
-
-    paginator = Paginator(qry_list, 5)
-    page = request.GET.get('page')
     try:
-        qry = paginator.page(page)
-    except PageNotAnInteger:
-        qry = paginator.page(1)
-    except InvalidPage:
-        qry = paginator.page(1)
-    except TypeError:
-        qry = paginator.page(1)        
-    except EmptyPage:
-        qry = paginator.page(paginator.num_pages)    
-    
+        user = request.session['user']
+        existing = Account.objects.filter(username=user).exists()
+        if existing:
+            qry_list = Post.objects.all() #.order_by('-timestamp')
+            search_q = request.GET.get("q")
+            if search_q:
+                qry_list = qry_list.filter(
+                    Q(title__icontains=search_q) |
+                    Q(content__icontains=search_q)
+                    )
 
-    context = {'qry':qry}
-    return render(request,'all_post.html', context)
+            paginator = Paginator(qry_list, 5)
+            page = request.GET.get('page')
+            try:
+                qry = paginator.page(page)
+            except PageNotAnInteger:
+                qry = paginator.page(1)
+            except InvalidPage:
+                qry = paginator.page(1)
+            except TypeError:
+                qry = paginator.page(1)        
+            except EmptyPage:
+                qry = paginator.page(paginator.num_pages)    
+            
+
+            context = {'qry':qry}
+            return render(request,'all_post.html', context)
+    except:
+        return HttpResponseRedirect('/')
 
 
 def details(request, post_myurl):
-    if request.GET:
-        search_q = request.GET.get("q")
-        return HttpResponseRedirect('/blog/?q='+search_q)
-    qry = get_object_or_404(Post, myurl=post_myurl)
-    # qry = Post.objects.get(pk=post_uid)
-    share_str = quote_plus(qry.content)
-    context = {'qry':qry, 'share_str':share_str}
-    return render(request, 'details.html', context)
+    try:
+        user = request.session['user']
+        existing = Account.objects.filter(username=user).exists()
+        if existing:
+            if request.GET:
+                search_q = request.GET.get("q")
+                return HttpResponseRedirect('/blog/?q='+search_q)
+            qry = get_object_or_404(Post, myurl=post_myurl)
+            # qry = Post.objects.get(pk=post_uid)
+            share_str = quote_plus(qry.content)
+            context = {'qry':qry, 'share_str':share_str}
+            return render(request, 'details.html', context)
+    except:
+        return HttpResponseRedirect('/')
 
 
 def create_post(request):
-    if request.GET:
-        search_q = request.GET.get("q")
-        return HttpResponseRedirect('/blog/?q='+search_q)
-    form = NewPostForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        instance = form.save(commit=False)
-        instance.uid = randomuid()
-        instance.save()
-        print(form.cleaned_data.get("title"))
-        messages.success(request, 'successfully created new POST !!')
-        return HttpResponseRedirect('/blog/')
-    elif request.POST and not form.is_valid():
-        if not form.cleaned_data.get("title"):
-            # print("title_error")
-            messages.error(request, 'title_error')
-        elif not form.cleaned_data.get("content"):
-            # print("content_error")    
-            messages.error(request, 'content_error')
-    # print(form)
-    context = {"form":form}
-    return render(request,'create_post.html', context)
+    try:
+        user = request.session['user']
+        existing = Account.objects.filter(username=user).exists()
+        if existing:
+            if request.GET:
+                search_q = request.GET.get("q")
+                return HttpResponseRedirect('/blog/?q='+search_q)
+            form = NewPostForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                instance = form.save(commit=False)
+                instance.uid = randomuid()
+                instance.save()
+                print(form.cleaned_data.get("title"))
+                messages.success(request, 'successfully created new POST !!')
+                return HttpResponseRedirect('/blog/')
+            elif request.POST and not form.is_valid():
+                if not form.cleaned_data.get("title"):
+                    # print("title_error")
+                    messages.error(request, 'title_error')
+                elif not form.cleaned_data.get("content"):
+                    # print("content_error")    
+                    messages.error(request, 'content_error')
+            # print(form)
+            context = {"form":form}
+            return render(request,'create_post.html', context)
+    except:
+        return HttpResponseRedirect('/')
+
+def logout(request):
+    request.session.flush()
+    return HttpResponseRedirect('/')
