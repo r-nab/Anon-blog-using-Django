@@ -35,7 +35,7 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return "blog/post_%s" %(self.id)
+        return "blog/post=%s" %(self.myurl)
     class Meta:
         ordering = ['-timestamp']
 

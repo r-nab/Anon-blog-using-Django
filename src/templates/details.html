@@ -2,6 +2,17 @@
 {% block page_title%}
 <title> Details</title>
 {% endblock page_title%}
+{% block style %}
+	.social-wrapper{
+		float:right;
+		padding-left:10px;
+		padding-right:10px;
+	}
+	.social-wrapper > a{
+	 margin-left:10px;
+	}
+
+{% endblock style %}
 
 {% block content %}
 {% if messages%}
@@ -22,6 +33,22 @@
 <img src="{{qry.image.url}}" class="img-responsive">
 {% endif %}
 <p>{{qry.content|linebreaks|safe}}</p>
+</div>
+
+<div class="social-wrapper">
+<h4 style="display:inline;">Share: </h4>
+<a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"><span class="fa fa-facebook"></span>
+</a>
+<a class="btn btn-social-icon btn-twitter" href="https://twitter.com/home?status={{share_str|truncatechars:30 }} {{ request.build_absolute_uri }}"><span class="fa fa-twitter"></span>
+</a>
+<a class="btn btn-social-icon btn-google" href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'><span class="fa fa-google"></span>
+</a>
+<a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://CodingForEntrepreneurs.com/"><span class="fa fa-facebook"></span>
+</a>
+<a class="btn btn-social-icon btn-pinterest" data-pin-do="buttonBookmark" href="//www.pinterest.com/pin/create/button/"><span class="fa fa-pinterest"></span>
+{% if qry.image %}
+<img src="{{qry.image.url}}">
+{% endif %}</a>
 </div>
 </div>
 </div>

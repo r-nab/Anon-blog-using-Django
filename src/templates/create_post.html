@@ -16,13 +16,15 @@
 <div class="well">
 <h3>Create Post</h3>
   <form class="" method="POST" action="" enctype="multipart/form-data" >{% csrf_token %}
-	<div class="form-group">
+	<div id="form-title" class="form-group">
 		<label for="title">Title:</label>
-		<input type="text" id="title" class="form-control" maxlength="120" name="{{ form.title.html_name}}">
+		<input type="text" id="title" class="form-control" maxlength="120" name="{{ form.title.html_name}}" >
+		<span id="form-title-span" style="display:none;" class="help-block">Error!! Enter a title.</span>
 	</div>
-	<div class="form-group">
+	<div id="form-content" class="form-group">
 		<label for="content">Content:</label>
-		<textarea id="content" class="form-control" name="{{ form.content.html_name}}" rows="4"></textarea>
+		<textarea id="content" class="form-control" name="{{ form.content.html_name}}" rows="4" ></textarea>
+		<span id="form-content-span" style="display:none;" class="help-block">Error!! Enter a content.</span>
 	</div>
 	<div class="form-group">
 		<label for="imageupload">Upload Image:</label>
@@ -44,4 +46,23 @@
 </div>
 </div>
 </div>
+{% if messages %}
+	{% for m in messages%}
+		{% if m.message == 'title_error' %}
+			<script>
+				$("#form-title").attr("class","form-group has-error");
+				$("#form-title-span").attr("style","display:inline;");
+			</script>
+		{% endif %}
+		{% if m.message == 'content_error' %}
+			<script>
+				$("#form-content").attr("class","form-group has-error");
+				$("#form-content-span").attr("style","display:inline;");
+			</script>
+		{% endif %}
+
+	{% endfor %}
+{% endif %}
+
+
 {% endblock content %}

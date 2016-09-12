@@ -9,6 +9,11 @@
 
 {% block content %}
 <br>
+{% if messages %}
+    {% for message in messages %}
+    <p class="bg-success">{{ message }}</p>
+    {% endfor %}
+{% endif %}
 {% for i in qry %}
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
@@ -18,8 +23,8 @@
 {% if i.image %}
 <img src="{{i.image.url}}" class="img-responsive">
 {% endif %}
-<p>{{i.content |linebreaks |truncatechars:50}}</p>
-<a href="{% url 'blog:details' i.myurl %}" class="btn btn-sm btn-success" style="width:80%; margin-left:10%; padding:5px;">view complete post</a>
+<p>{{i.content |truncatechars:50}} <span>
+<a href="{% url 'blog:details' i.myurl %}">More...</a></span></p>
 </div>
 </div>
 </div>
